@@ -74,7 +74,9 @@ for review in reviews:
     try:
         f.write("%s " % review[0])
         f.write("%s " % review[2])
-        f.write("%s" % review[1])
+        listOfWords = re.findall(r'\w+', review[1])
+        for word in listOfWords:
+            f.write("%s " % word)
         f.write("\n")
     except:
         print "Error with encode - first "
@@ -86,7 +88,9 @@ for review in reviews:
     try:
         train.write("%s " % review[0])
         train.write("%s " % review[2])
-        train.write("%s" % review[1])
+        listOfWords = re.findall(r'\w+', review[1])
+        for word in listOfWords:
+            train.write("%s " % word)
         train.write("\n")
     except:
         print "Error with encode - second"
@@ -98,7 +102,9 @@ for review in reviews:
     try:
         test.write("%s " % review[0])
         test.write("%s " % review[2])
-        test.write("%s" % review[1])
+        listOfWords = re.findall(r'\w+', review[1])
+        for word in listOfWords:
+            test.write("%s " % word)
         test.write("\n")
     except:
         print "Error with encode - third"
@@ -110,9 +116,7 @@ for review in reviews:
     try:
         arrayOfWords = getBagOfWords(review[1])
         bag_train.write("%s " % review[0])
-#            bag_train.write("%s " % review[2])
         for word in arrayOfWords:
-#                print word
             bag_train.write("%s " % word)
         bag_train.write("\n")
     except:
@@ -125,9 +129,7 @@ for review in reviews:
     try:
         arrayOfWords = getBagOfWords(review[1])
         bag_test.write("%s " % review[0])
-#            bag_train.write("%s " % review[2])
         for word in arrayOfWords:
-#                print word
             bag_test.write("%s " % word)
         bag_test.write("\n")
     except:
