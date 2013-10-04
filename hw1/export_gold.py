@@ -21,6 +21,89 @@ def getBagOfWords(txt):
 #    print bagofwords
     return bagofwords
 
+def getDataSetByType(start,limit,type,cursor):
+    cursor.execute(
+        """select * from (
+            (   SELECT  r.review_id, r.review, 'CMU' as school
+                FROM Reviews r inner join businesses b on b.businessid = r.businessid
+                inner join business_categories bc on b.businessid = bc.businessid
+                inner join (
+                    select r.review_id
+                    from Reviews r
+                    inner join businesses b on b.businessid = r.businessid
+                    inner join business_categories bc on b.businessid = bc.businessid
+                    where category = 'Restaurants'
+                ) r2 on r2.review_id = r.review_id
+                where b.schools = 'Carnegie Mellon University'
+                and category = %s
+                order by review_id
+                limit %s, %s)
+            union
+            (   SELECT  r.review_id, r.review, 'CMU' as school
+                FROM Reviews r inner join businesses b on b.businessid = r.businessid
+                inner join business_categories bc on b.businessid = bc.businessid
+                inner join (
+                    select r.review_id
+                    from Reviews r
+                    inner join businesses b on b.businessid = r.businessid
+                    inner join business_categories bc on b.businessid = bc.businessid
+                    where category = 'Restaurants'
+                ) r2 on r2.review_id = r.review_id
+                where b.schools = 'Columbia University'
+                and category = %s
+                order by review_id
+                limit %s, %s)
+            union
+            (   SELECT  r.review_id, r.review, 'CMU' as school
+                FROM Reviews r inner join businesses b on b.businessid = r.businessid
+                inner join business_categories bc on b.businessid = bc.businessid
+                inner join (
+                    select r.review_id
+                    from Reviews r
+                    inner join businesses b on b.businessid = r.businessid
+                    inner join business_categories bc on b.businessid = bc.businessid
+                    where category = 'Restaurants'
+                ) r2 on r2.review_id = r.review_id
+                where b.schools = 'Princeton University'
+                and category = %s
+                order by review_id
+                limit %s, %s)
+            union
+            (   SELECT  r.review_id, r.review, 'CMU' as school
+                FROM Reviews r inner join businesses b on b.businessid = r.businessid
+                inner join business_categories bc on b.businessid = bc.businessid
+                inner join (
+                    select r.review_id
+                    from Reviews r
+                    inner join businesses b on b.businessid = r.businessid
+                    inner join business_categories bc on b.businessid = bc.businessid
+                    where category = 'Restaurants'
+                ) r2 on r2.review_id = r.review_id
+                where b.schools = 'Harvard University'
+                and category = %s
+                order by review_id
+                limit %s, %s)
+            union
+            (   SELECT  r.review_id, r.review, 'CMU' as school
+                FROM Reviews r inner join businesses b on b.businessid = r.businessid
+                inner join business_categories bc on b.businessid = bc.businessid
+                inner join (
+                    select r.review_id
+                    from Reviews r
+                    inner join businesses b on b.businessid = r.businessid
+                    inner join business_categories bc on b.businessid = bc.businessid
+                    where category = 'Restaurants'
+                ) r2 on r2.review_id = r.review_id
+                where b.schools = 'University of Illinois - Urbana-Champaign'
+                and category = %s
+                order by review_id
+                limit %s, %s) ) d;""",
+        (type, start, limit, type, start, limit, type, start, limit, type, start, limit, type, start, limit))
+    reviews = cursor.fetchall()
+    return reviews
+
+
+
 
 def getDataSet(start, limit, cursor):
     cursor.execute(
@@ -135,6 +218,51 @@ for review in reviews:
     except:
         print "Error with encode - fifth"
 bag_test.close()
+
+f = open('complete_set_american_new.txt', 'w')
+
+reviews = getDataSetByType(0,300,'American (New)',cursor)
+for review in reviews:
+    try:
+        f.write("%s " % review[0])
+        f.write("%s " % review[2])
+        listOfWords = re.findall(r'\w+', review[1])
+        for word in listOfWords:
+            f.write("%s " % word)
+        f.write("\n")
+    except:
+        print "Error with encode - first "
+f.close()
+
+f = open('complete_set_american_traditional.txt', 'w')
+reviews = getDataSetByType(0,300,'American (Traditional)',cursor)
+for review in reviews:
+    try:
+        f.write("%s " % review[0])
+        f.write("%s " % review[2])
+        listOfWords = re.findall(r'\w+', review[1])
+        for word in listOfWords:
+            f.write("%s " % word)
+        f.write("\n")
+    except:
+        print "Error with encode - first "
+f.close()
+
+f = open('complete_set_chinese.txt', 'w')
+
+reviews = getDataSetByType(0,300,'Chinese',cursor)
+for review in reviews:
+    try:
+        f.write("%s " % review[0])
+        f.write("%s " % review[2])
+        listOfWords = re.findall(r'\w+', review[1])
+        for word in listOfWords:
+            f.write("%s " % word)
+        f.write("\n")
+    except:
+        print "Error with encode - first "
+f.close()
+
 
 if cursor:
     cursor.close()
