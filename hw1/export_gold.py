@@ -27,31 +27,31 @@ def getDataSet(start, limit, cursor):
         """select * from (
             (SELECT r.review_id, r.review, 'CMU' as school
             FROM Reviews r inner join businesses b on b.businessid = r.businessid
-            where b.schools = 'Carnegie Mellon University'
+            where b.schools = 'Carnegie Mellon University' and categories = 'Restaurants'
             order by review_id
             limit %s, %s)
             union
             (SELECT r.review_id, r.review, 'Columbia' as school
             FROM Reviews r inner join businesses b on b.businessid = r.businessid
-            where b.schools = 'Columbia University'
+            where b.schools = 'Columbia University' and categories = 'Restaurants'
             order by review_id
             limit %s, %s)
             union
             (SELECT r.review_id, r.review, 'Harvard' as school
             FROM Reviews r inner join businesses b on b.businessid = r.businessid
-            where b.schools = 'Harvard University'
+            where b.schools = 'Harvard University' and categories = 'Restaurants'
             order by review_id
             limit %s, %s)
             union
             (SELECT r.review_id, r.review, 'Princeton' as school
             FROM Reviews r inner join businesses b on b.businessid = r.businessid
-            where b.schools = 'Princeton University'
+            where b.schools = 'Princeton University' and categories = 'Restaurants'
             order by review_id
             limit %s, %s)
             union
             (SELECT r.review_id, r.review, 'Urbana' as school
             FROM Reviews r inner join businesses b on b.businessid = r.businessid
-            where b.schools = 'University of Illinois - Urbana-Champaign'
+            where b.schools = 'University of Illinois - Urbana-Champaign' and categories = 'Restaurants'
             order by review_id
             limit %s, %s)
             ) d;""",
@@ -83,7 +83,7 @@ for review in reviews:
 f.close()
 
 train = open('train_gold.txt', 'w')
-reviews = getDataSet(0,375,cursor)
+reviews = getDataSet(0,225,cursor)
 for review in reviews:
     try:
         train.write("%s " % review[0])
@@ -97,7 +97,7 @@ for review in reviews:
 train.close()
 
 test = open('test_gold.txt', 'w')
-reviews = getDataSet(375,125,cursor)
+reviews = getDataSet(225,75,cursor)
 for review in reviews:
     try:
         test.write("%s " % review[0])
@@ -111,7 +111,7 @@ for review in reviews:
 test.close()
 
 bag_train = open('train_bagofwords.txt', 'w')
-reviews = getDataSet(0,375,cursor)
+reviews = getDataSet(0,225,cursor)
 for review in reviews:
     try:
         arrayOfWords = getBagOfWords(review[1])
@@ -124,7 +124,7 @@ for review in reviews:
 bag_train.close()
 
 bag_test = open('test_bagofwords.txt', 'w')
-reviews = getDataSet(375,125,cursor)
+reviews = getDataSet(225,75,cursor)
 for review in reviews:
     try:
         arrayOfWords = getBagOfWords(review[1])
